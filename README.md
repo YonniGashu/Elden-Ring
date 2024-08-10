@@ -1,5 +1,6 @@
 # "Elder Circle"
-#### An attempt at cloning Elden Ring in Unity and making it my own.
+### An attempt at cloning Elden Ring in Unity and making it my own.
+#### Unity Version:2021.3.10f1
 
 After working with Unity for a while to make small projects, I've decided to take on a larger project using Sebastian Graves' tutorials as a base for building this game.
 This isn't intended to be released, but building this project will allow me to move forward in my game development.
