@@ -274,7 +274,7 @@
       "url": "https://packages.unity.com"
     },
     "com.veriorpies.parrelsync": {
-      "version": "file:C:/Users/Yonathan Gashu/Downloads/ParrelSync-master/ParrelSync-master/ParrelSync",
+      "version": "file:/Users/yonnigashu/Downloads/ParrelSync-master/ParrelSync",
       "depth": 0,
       "source": "local",
       "dependencies": {}
