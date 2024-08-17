@@ -68,6 +68,7 @@ namespace YG
 
         private void HandleGroundedMovement()
         {
+            if (!player.canMove) { return; }
             GetMovementValues();
             //Based on our camera's direction and our inputs
             moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
@@ -88,6 +89,7 @@ namespace YG
 
         private void HandleRotation()
         {
+            if (!player.canRotate) { return; }
             targetRotationDirection = Vector3.zero;
             targetRotationDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
             targetRotationDirection = targetRotationDirection + PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
@@ -106,10 +108,7 @@ namespace YG
 
         public void HandleDodge()
         {
-            if (player.isPerformingAction)
-            {
-                return;
-            }
+            if (player.isPerformingAction) { return; }
 
             // If the player is in motion, perform a roll
             if (moveAmount > 0)

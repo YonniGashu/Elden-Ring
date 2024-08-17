@@ -22,12 +22,19 @@ namespace YG
             character.animator.SetFloat("Vertical", verticalValue, 0.1f, Time.deltaTime);
         }
 
-        public virtual void PlayActionAnimation(string animationName, bool isPerformingAction, bool applyRootMotion = true)
+        public virtual void PlayActionAnimation(
+            string animationName,
+            bool isPerformingAction,
+            bool applyRootMotion = true,
+            bool canRotate = false,
+            bool canMove = false)
         {
             character.animator.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationName, 0.2f);
             // CAN BE USED TO STOP CHARACTER FROM ATTEMPTING ANOTHER ACTION
             character.isPerformingAction = isPerformingAction;
+            character.canRotate = canRotate;
+            character.canMove = canMove;
         }
     }
 }

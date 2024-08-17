@@ -15,6 +15,8 @@ namespace YG
                 character = animator.GetComponent<CharacterManager>();
             }
             character.isPerformingAction = false;
+            character.canMove = true;
+            character.canRotate = true;
         }
 
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
