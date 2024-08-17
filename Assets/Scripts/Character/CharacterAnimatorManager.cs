@@ -26,6 +26,7 @@ namespace YG
         {
             character.animator.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationName, 0.2f);
+            // CAN BE USED TO STOP CHARACTER FROM ATTEMPTING ANOTHER ACTION
             character.isPerformingAction = isPerformingAction;
         }
     }

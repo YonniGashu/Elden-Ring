@@ -14,11 +14,12 @@ namespace YG
         [HideInInspector] public float moveAmount;
 
         [Header("Movement Settings")]
-        private Vector3 moveDirection;
-        private Vector3 targetRotationDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 5;
         [SerializeField] float rotationSpeed = 15;
+        private Vector3 moveDirection;
+        private Vector3 targetRotationDirection;
+        
 
         [Header("Dodge")]
         private Vector3 rollDirection;
