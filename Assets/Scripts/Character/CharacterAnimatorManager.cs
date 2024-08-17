@@ -21,5 +21,12 @@ namespace YG
             character.animator.SetFloat("Horizontal", horizontalValue, 0.1f, Time.deltaTime);
             character.animator.SetFloat("Vertical", verticalValue, 0.1f, Time.deltaTime);
         }
+
+        public virtual void PlayActionAnimation(string animationName, bool isPerformingAction, bool applyRootMotion = true)
+        {
+            character.animator.applyRootMotion = applyRootMotion;
+            character.animator.CrossFade(animationName, 0.2f);
+            character.isPerformingAction = isPerformingAction;
+        }
     }
 }

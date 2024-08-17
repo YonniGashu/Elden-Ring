@@ -9,15 +9,19 @@ namespace YG
         PlayerManager player;
 
         // Taken from the input manager
-        public float verticalMovement;
-        public float horizontalMovement;
-        public float moveAmount;
+        [HideInInspector] public float verticalMovement;
+        [HideInInspector] public float horizontalMovement;
+        [HideInInspector] public float moveAmount;
 
+        [Header("Movement Settings")]
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 5;
         [SerializeField] float rotationSpeed = 15;
+
+        [Header("Dodge")]
+        private Vector3 rollDirection;
 
         protected override void Awake()
         {
@@ -97,6 +101,33 @@ namespace YG
             Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
             Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
             transform.rotation = targetRotation;
+        }
+
+        public void HandleDodge()
+        {
+            if (player.isPerformingAction)
+            {
+                return;
+            }
+
+            // If the player is in motion, perform a roll
+            if (moveAmount > 0)
+            {
+                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                rollDirection = rollDirection + PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                rollDirection.y = 0;
+                rollDirection.Normalize();
+
+                Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
+                player.transform.rotation = playerRotation;
+
+                player.playerAnimatorManager.PlayActionAnimation("Roll_Forward_01", true, true);
+            }
+            // else if the player is standing still, perform a backstep
+            else
+            {
+
+            }
         }
     }
 }
