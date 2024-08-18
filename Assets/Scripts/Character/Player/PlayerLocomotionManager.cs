@@ -126,7 +126,7 @@ namespace YG
             // else if the player is standing still, perform a backstep
             else
             {
-
+                player.playerAnimatorManager.PlayActionAnimation("Main_Back_Step_01", true, true);
             }
         }
     }
