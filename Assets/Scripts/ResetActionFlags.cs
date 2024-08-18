@@ -15,6 +15,7 @@ namespace YG
                 character = animator.GetComponent<CharacterManager>();
             }
             character.isPerformingAction = false;
+            character.applyRootMotion = false;
             character.canMove = true;
             character.canRotate = true;
         }

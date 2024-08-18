@@ -14,8 +14,8 @@ namespace YG
         [HideInInspector] public float moveAmount;
 
         [Header("Movement Settings")]
-        [SerializeField] float walkingSpeed = 2;
-        [SerializeField] float runningSpeed = 5;
+        [SerializeField] float walkingSpeed = 1.5f;
+        [SerializeField] float runningSpeed = 4.5f;
         [SerializeField] float rotationSpeed = 15;
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
