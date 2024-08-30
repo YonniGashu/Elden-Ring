@@ -16,16 +16,20 @@ namespace YG
 
         PlayerControls playerControls;
 
-        [Header("MOVEMENT INPUT")]
+        [Header("CAMERA MOVEMENT INPUT")]
+        [SerializeField] Vector2 cameraInput;
+        public float cameraVerticalInput;
+        public float cameraHorizontalInput;
+
+        [Header("PLAYER MOVEMENT INPUT")]
         [SerializeField] Vector2 movementInput;
         public float verticalInput;
         public float horizontalInput;
         public float moveAmount;
 
-        [Header("CAMERA MOVEMENT INPUT")]
-        [SerializeField] Vector2 cameraInput;
-        public float cameraVerticalInput;
-        public float cameraHorizontalInput;
+        [Header("PLAYER ACTIONS INPUT")]
+        [SerializeField] bool dodgeInput = false;
+
 
         private void Awake()
         {
@@ -70,6 +74,7 @@ namespace YG
 
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
+                playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
             }
 
             playerControls.Enable();
@@ -95,12 +100,20 @@ namespace YG
                 }
             }
         }
+
         public void Update()
+        {
+            HandleAllInput();
+        }
+
+        private void HandleAllInput()
         {
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
+            HandleDodgeInput();
         }
 
+        #region MOVEMENTS
         private void HandlePlayerMovementInput()
         {
             verticalInput = movementInput.y;
@@ -132,5 +145,20 @@ namespace YG
             cameraVerticalInput = cameraInput.y;
             cameraHorizontalInput = cameraInput.x;
         }
+        #endregion
+
+        #region ACTIONS
+        private void HandleDodgeInput()
+        {
+            if (dodgeInput)
+            {
+                dodgeInput = false;
+
+                // FUTURE NOTE: If any UI or menu is open, return and don't dodge
+                //PERFORM A DODGE
+                player.playerLocomotionManager.HandleDodge();
+            }
+        }
+        #endregion
     }
 }
