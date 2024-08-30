@@ -142,7 +142,7 @@ namespace YG
 
             if (player == null) return;
             // If we arent locked on only use the move amount
-            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
 
             // If we are locked on, pass the horizontal movement as well
         }
