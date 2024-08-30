@@ -172,6 +172,9 @@ namespace YG
             if (sprintInput)
             {
                 player.playerLocomotionManager.HandleSprint();
+            } else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
             }
         }
         #endregion

@@ -14,8 +14,9 @@ namespace YG
         [HideInInspector] public float moveAmount;
 
         [Header("Movement Settings")]
-        [SerializeField] float walkingSpeed = 1.5f;
-        [SerializeField] float runningSpeed = 4.5f;
+        [SerializeField] float walkingSpeed = 2;
+        [SerializeField] float runningSpeed = 4;
+        [SerializeField] float sprintingSpeed = 6.5f;
         [SerializeField] float rotationSpeed = 15;
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
@@ -76,14 +77,20 @@ namespace YG
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            if (PlayerInputManager.instance.moveAmount > 0.5f)
+            if (player.playerNetworkManager.isSprinting.Value)
             {
-                player.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
-
+                player.characterController.Move(moveDirection * sprintingSpeed * Time.deltaTime);
             }
-            else if (PlayerInputManager.instance.moveAmount <= 0.5f)
+            else
             {
-                player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
+                if (PlayerInputManager.instance.moveAmount > 0.5f)
+                {
+                    player.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
+                }
+                else if (PlayerInputManager.instance.moveAmount <= 0.5f)
+                {
+                    player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
+                }
             }
         }
 
@@ -127,6 +134,22 @@ namespace YG
             else
             {
                 player.playerAnimatorManager.PlayActionAnimation("Main_Back_Step_01", true, true);
+            }
+        }
+
+        public void HandleSprint()
+        {
+            if (player.isPerformingAction) { player.playerNetworkManager.isSprinting.Value = false; }
+
+            // IF WE HAVE NO STAMINA, SET SPRINTING TO FALSE
+
+            // IF WE ARE MOVING, SET SPRINTING TO TRUE. OTHERWISE, FALSE.
+            if (moveAmount >= 0.5)
+            {
+                player.playerNetworkManager.isSprinting.Value = true;
+            } else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
             }
         }
     }
