@@ -29,6 +29,7 @@ namespace YG
 
         [Header("PLAYER ACTIONS INPUT")]
         [SerializeField] bool dodgeInput = false;
+        [SerializeField] bool sprintInput = false;
 
 
         private void Awake()
@@ -75,6 +76,11 @@ namespace YG
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+
+                //HOLDING THE INPUT SETS THE BOOL TO TRUE
+                playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
+                //RELEASING THE INPUT SETS THE BOOL TO FALSE
+                playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
             }
 
             playerControls.Enable();
@@ -111,6 +117,7 @@ namespace YG
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
+            HandleSprintInput();
         }
 
         #region MOVEMENTS
@@ -135,7 +142,7 @@ namespace YG
 
             if (player == null) return;
             // If we arent locked on only use the move amount
-            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
 
             // If we are locked on, pass the horizontal movement as well
         }
@@ -157,6 +164,17 @@ namespace YG
                 // FUTURE NOTE: If any UI or menu is open, return and don't dodge
                 //PERFORM A DODGE
                 player.playerLocomotionManager.HandleDodge();
+            }
+        }
+
+        private void HandleSprintInput()
+        {
+            if (sprintInput)
+            {
+                player.playerLocomotionManager.HandleSprint();
+            } else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
             }
         }
         #endregion
