@@ -14,16 +14,17 @@ namespace YG
         [HideInInspector] public float moveAmount;
 
         [Header("Movement Settings")]
+        private Vector3 moveDirection;
+        private Vector3 targetRotationDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 4;
         [SerializeField] float sprintingSpeed = 6.5f;
         [SerializeField] float rotationSpeed = 15;
-        private Vector3 moveDirection;
-        private Vector3 targetRotationDirection;
-        
+        [SerializeField] int sprintingStaminaCost = 2;
 
         [Header("Dodge")]
         private Vector3 rollDirection;
+        [SerializeField] float dodgeStaminaCost = 25;
 
         protected override void Awake()
         {
@@ -117,6 +118,11 @@ namespace YG
         {
             if (player.isPerformingAction) { return; }
 
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+            {
+                return;
+            }
+
             // If the player is in motion, perform a roll
             if (moveAmount > 0)
             {
@@ -135,13 +141,15 @@ namespace YG
             {
                 player.playerAnimatorManager.PlayActionAnimation("Main_Back_Step_01", true, true);
             }
+
+            player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
         }
 
         public void HandleSprint()
         {
             if (player.isPerformingAction) { player.playerNetworkManager.isSprinting.Value = false; }
 
-            // IF WE HAVE NO STAMINA, SET SPRINTING TO FALSE
+            if (player.playerNetworkManager.currentStamina.Value <= 0) { player.playerNetworkManager.isSprinting.Value = false; return; }
 
             // IF WE ARE MOVING, SET SPRINTING TO TRUE. OTHERWISE, FALSE.
             if (moveAmount >= 0.5)
@@ -150,6 +158,11 @@ namespace YG
             } else
             {
                 player.playerNetworkManager.isSprinting.Value = false;
+            }
+
+            if (player.playerNetworkManager.isSprinting.Value)
+            {
+                player.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
             }
         }
     }

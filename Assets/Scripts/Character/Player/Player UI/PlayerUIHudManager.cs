@@ -7,14 +7,14 @@ namespace YG {
     {
         [SerializeField] UI_StatBar staminaBar;
 
-        public void SetNewStaminaValue(int oldVal, int newVal)
+        public void SetNewStaminaValue(float oldVal, float newVal)
         {
-            staminaBar.SetStat(newVal);
+            staminaBar.SetStat(Mathf.RoundToInt(newVal));
         }
 
-        public void SetMaxStaminaValue(int maxVal)
+        public void SetMaxStaminaValue(float maxVal)
         {
-            staminaBar.SetMaxStat(maxVal);
+            staminaBar.SetMaxStat(Mathf.RoundToInt(maxVal));
         }
     }
 }
