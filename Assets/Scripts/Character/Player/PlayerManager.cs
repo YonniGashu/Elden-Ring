@@ -9,6 +9,8 @@ namespace YG
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerNetworkManager playerNetworkManager;
+        [HideInInspector] public PlayerStatsManager playerStatsManager;
+
 
         protected override void Awake()
         {
@@ -18,6 +20,7 @@ namespace YG
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
             playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
             playerNetworkManager = GetComponent<PlayerNetworkManager>();
+            playerStatsManager = GetComponent<PlayerStatsManager>();
         }
 
         protected override void Update()
@@ -30,6 +33,9 @@ namespace YG
 
             //HANDLE MOVMENET
             playerLocomotionManager.HandleAllMovement();
+
+            // REGEN STAMINA
+            playerStatsManager.RegenerateStamina();
         }
 
         protected override void LateUpdate()
@@ -49,6 +55,14 @@ namespace YG
             {
                 PlayerCamera.instance.player = this;
                 PlayerInputManager.instance.player = this;
+
+                playerNetworkManager.currentStamina.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
+                playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegenTimer;
+
+                //WE GONNA MOVE THIS WHENEVER WE ADD SAVING AND LOADING
+                playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
+                playerNetworkManager.currentStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
+                PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
             }
         }
     }
