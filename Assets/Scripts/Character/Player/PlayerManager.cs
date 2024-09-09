@@ -65,5 +65,20 @@ namespace YG
                 PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
             }
         }
+
+        public void SaveGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        {
+            currentCharacterData.characterName = playerNetworkManager.characterName.Value.ToString();
+            currentCharacterData.xCoord = transform.position.x;
+            currentCharacterData.yCoord = transform.position.y;
+            currentCharacterData.zCoord = transform.position.z;
+        }
+
+        public void LoadGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        {
+            playerNetworkManager.characterName.Value = currentCharacterData.characterName;
+            Vector3 myPosition = new Vector3(currentCharacterData.xCoord, currentCharacterData.yCoord, currentCharacterData.zCoord);
+            transform.position = myPosition;
+        }
     }
 }
