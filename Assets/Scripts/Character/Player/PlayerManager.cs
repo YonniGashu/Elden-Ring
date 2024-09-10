@@ -11,7 +11,6 @@ namespace YG
         [HideInInspector] public PlayerNetworkManager playerNetworkManager;
         [HideInInspector] public PlayerStatsManager playerStatsManager;
 
-
         protected override void Awake()
         {
             base.Awake();
