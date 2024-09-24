@@ -57,7 +57,6 @@ namespace YG
             HandleGroundedMovement();
             HandleRotation();
             //AERIAL MOVEMENT
-            
         }
 
         private void GetMovementValues()

@@ -12,6 +12,7 @@ namespace YG {
         private float staminaRegenerationTimer = 0;
         private float staminaTickTimer = 0;
         [SerializeField] float staminaRegenerationDelay = 2;
+
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
