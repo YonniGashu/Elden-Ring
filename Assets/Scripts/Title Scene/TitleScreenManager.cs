@@ -10,6 +10,8 @@ namespace YG
 {
     public class TitleScreenManager : MonoBehaviour 
     { 
+        public static TitleScreenManager instance;
+
         [Header("Menus")]
         [SerializeField] GameObject titleScreenMainMenu;
         [SerializeField] GameObject titleScreenLoadMenu;
@@ -17,6 +19,19 @@ namespace YG
         [Header("Buttons")]
         [SerializeField] Button loadMenuReturnButton;
         [SerializeField] Button mainMenuLoadGameButton;
+        [SerializeField] Button mainMenuNewGameButton;
+
+        [Header("Pop Ups")]
+        [SerializeField] GameObject noCharacterSlotsNoti;
+        [SerializeField] Button noCharacterSlotsClose;
+
+        public void Awake() {
+            if (instance == null) {
+                instance = this;
+            } else {
+                Destroy(gameObject);
+            }
+        }
 
         public void StartNetworkAsHost()
         {
@@ -25,8 +40,7 @@ namespace YG
         
         public void StartNewGame()
         {
-            WorldSaveGameManager.instance.CreateNewGame();
-            StartCoroutine(WorldSaveGameManager.instance.LoadWorldScene());
+            WorldSaveGameManager.instance.AttemptToCreateNewGame();
         }
 
         public void OpenLoadGameMenu() {
@@ -49,6 +63,16 @@ namespace YG
 
             // SELECT THE MAIN MENU LOAD GAME BUTTON
             mainMenuLoadGameButton.Select();
+        }
+    
+        public void DisplayNoFreeCharacterSlotsNoti() {
+            noCharacterSlotsNoti.SetActive(true);
+            noCharacterSlotsClose.Select();
+        }
+    
+        public void CloseNoFreeCharacterSlotsNoti() {
+            noCharacterSlotsNoti.SetActive(false);
+            mainMenuNewGameButton.Select();
         }
     }
     
