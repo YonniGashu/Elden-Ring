@@ -249,10 +249,21 @@ namespace YG
             saveFileDataWriter.saveFileName = saveFileName;
 
             // PASS THE PLAYERS INFO, FROM GAME, TO THEIR SAVE FILE
-            player.SaveGameDataFromCurrentCharacterData(ref currentCharacterData);
+            player.SaveGameDataToCurrentCharacterData(ref currentCharacterData);
 
             // WRITE THAT INFO ONTO A JSON FILE, SAVED TO THIS MACHINE
             saveFileDataWriter.CreateNewCharacterSaveFile(currentCharacterData);
+        }
+
+        public void DeleteGame(CharacterSlot characterSlot) {
+            // CHOOSE A FILE TO DELETE BASED ON THE NAME
+            saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(characterSlot);
+
+            saveFileDataWriter = new SaveFileDataWriter();
+            saveFileDataWriter.saveDataDirectoryPath = Application.persistentDataPath;
+            saveFileDataWriter.saveFileName = saveFileName;
+
+            saveFileDataWriter.DeleteSaveFile();
         }
 
         // LOAD ALL CHARACTER PROFILES ON DEVICE WHEN STARTING GAME
@@ -294,7 +305,10 @@ namespace YG
 
         public IEnumerator LoadWorldScene()
         {
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldSceneIndex);
+            //AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldSceneIndex);
+            
+            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(currentCharacterData.sceneIndex);
+            
             player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
             yield return null;
         }

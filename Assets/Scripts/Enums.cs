@@ -20,5 +20,6 @@ namespace YG
         CharacterSlot_08,
         CharacterSlot_09,
         CharacterSlot_10,
+        NO_SLOT
     }
 }

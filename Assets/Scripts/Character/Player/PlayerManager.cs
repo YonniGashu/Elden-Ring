@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace YG
 {
@@ -66,8 +67,9 @@ namespace YG
             }
         }
 
-        public void SaveGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
+        public void SaveGameDataToCurrentCharacterData(ref CharacterSaveData currentCharacterData)
         {
+            currentCharacterData.sceneIndex = SceneManager.GetActiveScene().buildIndex;
             currentCharacterData.characterName = playerNetworkManager.characterName.Value.ToString();
             currentCharacterData.xCoord = transform.position.x;
             currentCharacterData.yCoord = transform.position.y;
