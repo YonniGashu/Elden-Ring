@@ -30,6 +30,7 @@ namespace YG
         [Header("PLAYER ACTIONS INPUT")]
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput = false;
+        [SerializeField] bool jumpInput = false;
 
 
         private void Awake()
@@ -76,6 +77,7 @@ namespace YG
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+                playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
 
                 //HOLDING THE INPUT SETS THE BOOL TO TRUE
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
@@ -175,6 +177,13 @@ namespace YG
             } else
             {
                 player.playerNetworkManager.isSprinting.Value = false;
+            }
+        }
+
+        private void HandleJumpInput() {
+            if (jumpInput) {
+                jumpInput = false;
+                player.playerLocomotionManager.HandleJump();
             }
         }
         #endregion

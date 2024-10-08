@@ -14,17 +14,22 @@ namespace YG
         [HideInInspector] public float moveAmount;
 
         [Header("Movement Settings")]
-        private Vector3 moveDirection;
-        private Vector3 targetRotationDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 4;
         [SerializeField] float sprintingSpeed = 6.5f;
         [SerializeField] float rotationSpeed = 15;
         [SerializeField] int sprintingStaminaCost = 2;
+        private Vector3 moveDirection;
+        private Vector3 targetRotationDirection;
 
         [Header("Dodge")]
-        private Vector3 rollDirection;
         [SerializeField] float dodgeStaminaCost = 25;
+        private Vector3 rollDirection;
+
+        [Header("Jump")]
+        [SerializeField] float jumpStaminaCost = 25;
+
+
 
         protected override void Awake()
         {
@@ -163,6 +168,33 @@ namespace YG
             {
                 player.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
             }
+        }
+
+        public void HandleJump() {
+            if (player.isPerformingAction) { return; }
+
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+            {
+                return;
+            }
+
+            if (player.isJumping) {
+                return;
+            }
+
+            if (!player.isGrounded) {
+                return;
+            } 
+
+            //if 2 handing, play 2 handing animaiton
+            player.playerAnimatorManager.PlayActionAnimation("Main_Jump_01", false);
+            player.isJumping = true;
+            
+            player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
+        }
+    
+        public void ApplyJumpVelocity() {
+            // APPLY AN UPWARD VELOCITY
         }
     }
 }
