@@ -120,6 +120,7 @@ namespace YG
             HandleCameraMovementInput();
             HandleDodgeInput();
             HandleSprintInput();
+            HandleJumpInput();
         }
 
         #region MOVEMENTS

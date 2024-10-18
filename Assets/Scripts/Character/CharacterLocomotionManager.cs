@@ -10,7 +10,7 @@ namespace YG
         CharacterManager character;
 
         [Header("Ground & Jumping Check")]
-        [SerializeField] float gravityForce = -5.55f;
+        [SerializeField] protected float gravityForce = -5.55f;
         [SerializeField] LayerMask groundLayer;
         [SerializeField] float groundCheckSphereRadius = 0.3f;
         [SerializeField] protected Vector3 yVelocity; // THE FORCE THE CHAR IS PULLED UP OR DOWN (FALL VS JUMP)
