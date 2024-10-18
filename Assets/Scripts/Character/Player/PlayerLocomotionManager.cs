@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace YG
 {
@@ -14,17 +17,26 @@ namespace YG
         [HideInInspector] public float moveAmount;
 
         [Header("Movement Settings")]
-        private Vector3 moveDirection;
-        private Vector3 targetRotationDirection;
         [SerializeField] float walkingSpeed = 2;
         [SerializeField] float runningSpeed = 4;
         [SerializeField] float sprintingSpeed = 6.5f;
         [SerializeField] float rotationSpeed = 15;
         [SerializeField] int sprintingStaminaCost = 2;
+        private Vector3 moveDirection;
+        private Vector3 targetRotationDirection;
 
         [Header("Dodge")]
-        private Vector3 rollDirection;
         [SerializeField] float dodgeStaminaCost = 25;
+        private Vector3 rollDirection;
+
+        [Header("Jump")]
+        [SerializeField] float jumpStaminaCost = 25;
+        [SerializeField] float jumpHeight = 4;
+        [SerializeField] float jumpForwardSpeed = 5;
+        [SerializeField] float freeFallSpeed = 2;
+        private Vector3 jumpDirection;
+
+
 
         protected override void Awake()
         {
@@ -56,6 +68,8 @@ namespace YG
         {
             HandleGroundedMovement();
             HandleRotation();
+            HandleJumpingMovement();
+            HandleFreeFallMovement();
             //AERIAL MOVEMENT
         }
 
@@ -91,6 +105,24 @@ namespace YG
                 {
                     player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
                 }
+            }
+        }
+
+        private void HandleJumpingMovement() {
+            if (player.isJumping) {
+                player.characterController.Move(jumpDirection * jumpForwardSpeed * Time.deltaTime);
+            }
+        }
+
+        private void HandleFreeFallMovement() {
+            if (!player.isGrounded) {
+                Vector3 freeFallDirection;
+                
+                freeFallDirection = PlayerCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput;
+                freeFallDirection += PlayerCamera.instance.transform.right * PlayerInputManager.instance.horizontalInput;
+                freeFallDirection.y = 0;
+
+                player.characterController.Move(freeFallDirection * freeFallSpeed * Time.deltaTime);
             }
         }
 
@@ -163,6 +195,44 @@ namespace YG
             {
                 player.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
             }
+        }
+
+        public void HandleJump() {
+            if (player.isPerformingAction) { return; }
+
+            if (player.playerNetworkManager.currentStamina.Value <= 0){ return; }
+
+            if (player.isJumping) { return; }
+
+            if (!player.isGrounded) { return; } 
+
+            //if 2 handing, play 2 handing animaiton
+            player.playerAnimatorManager.PlayActionAnimation("Main_Jump_01", false);
+            player.isJumping = true;
+
+            player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
+
+            jumpDirection = PlayerCamera.instance.cameraObject.transform.forward * PlayerInputManager.instance.verticalInput;
+            jumpDirection += PlayerCamera.instance.cameraObject.transform.right  * PlayerInputManager.instance.horizontalInput;
+            jumpDirection.y = 0;
+
+            if (jumpDirection != Vector3.zero) {
+                // SPRINTING = FULL, RUNNING = HALF, WALKING = QUARTER
+                if (player.playerNetworkManager.isSprinting.Value) {
+                    jumpDirection *= 1;
+                } else if (PlayerInputManager.instance.moveAmount >= 0.5) {
+                    jumpDirection *= 0.5f;
+                }
+                else if (PlayerInputManager.instance.moveAmount < 0.5) {
+                    jumpDirection *= 0.25f;
+                }
+            }
+
+            
+        }
+    
+        public void ApplyJumpVelocity() {
+            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityForce);
         }
     }
 }

@@ -13,6 +13,8 @@ namespace YG {
 
         [Header("Flags")]
         public bool isPerformingAction = false;
+        public bool isJumping = false;
+        public bool isGrounded = true;
         public bool applyRootMotion = false;
         public bool canRotate = true;
         public bool canMove = true;
@@ -28,6 +30,7 @@ namespace YG {
 
         protected virtual void Update()
         {
+            animator.SetBool("isGrounded", isGrounded);
             // if the character is being controlled from ourside, set its network position to the position of our transform
             if (IsOwner)
             {
