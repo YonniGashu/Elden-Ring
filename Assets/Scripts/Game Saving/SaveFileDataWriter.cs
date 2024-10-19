@@ -50,7 +50,7 @@ namespace YG
                         fileWriter.Write(dataToStore);
                     }
                 }
-            } catch (Exception ex)
+            } catch
             {
                 Debug.LogError("ERROR WHILE TRYING TO SAVE DATA CHARACTER DATA, GAME NOT SAVED" + savePath + "\n");
             }
@@ -79,7 +79,7 @@ namespace YG
 
                     // DESERIALIZE THE DATA FROM JSON BACK TO UNITY C#
                     characterData = JsonUtility.FromJson<CharacterSaveData>(dataToLoad);
-                } catch (Exception ex)
+                } catch
                 {
                     characterData = null;
                 }
